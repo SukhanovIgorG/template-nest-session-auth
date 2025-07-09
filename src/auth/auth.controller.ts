@@ -7,15 +7,21 @@ import {
   Res,
   UnauthorizedException,
   Req,
+  // UseGuards,
+  Get,
+  Request,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 
-import { Request } from 'express';
+// import { AuthGuard } from './auth.guard';
+import { User } from 'types';
+import { Roles } from './roles.decorator';
 
 interface RequestWithCookies extends Request {
+  user: User;
   cookies: {
     refreshToken?: string;
   };
@@ -51,7 +57,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken, user } =
-      await this.authService.register(loginAuthDto);
+      await this.authService.login(loginAuthDto);
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -84,5 +90,12 @@ export class AuthController {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return { accessToken, user };
+  }
+
+  // @UseGuards(AuthGuard)
+  @Roles(['admin'])
+  @Get('profile')
+  getProfile(@Request() req: RequestWithCookies) {
+    return req.user;
   }
 }
