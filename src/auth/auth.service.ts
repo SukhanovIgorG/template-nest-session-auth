@@ -17,12 +17,23 @@ export class AuthService {
     const payload = { sub: user.id, email: user.email };
 
     const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '15m',
+      expiresIn: '1h',
     });
 
     const refreshToken = await this.jwtService.signAsync(payload, {
       expiresIn: '7d',
     });
+
+    DB.users = DB.users.map((u) => {
+      if (u.id === user.id) {
+        u.refreshToken = refreshToken;
+      }
+      return u;
+    });
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
 
     return {
       accessToken,
@@ -42,6 +53,14 @@ export class AuthService {
         user.email === LoginAuthDto.email &&
         user.password === LoginAuthDto.password,
     );
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    return await this.getAuth(user);
+  }
+
+  async refresh(refreshToken: string) {
+    const user = DB.users.find((user) => user.refreshToken === refreshToken);
     if (!user) {
       throw new UnauthorizedException();
     }
