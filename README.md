@@ -33,5 +33,3 @@ yarn docker:prod
 ```
 yarn docker:down
 ```
-
-Описание эндпонтов доступно на http://localhost:3000/swagger
