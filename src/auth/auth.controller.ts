@@ -17,22 +17,27 @@ import { RegisterAuthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 
 // import { AuthGuard } from './auth.guard';
-import { User } from 'types';
 import { Roles } from './roles.decorator';
+import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { User as UserEntity } from 'src/users/user.entity';
+import { AuthResponseDto } from './dto/auth-response.dto';
 
 interface RequestWithCookies extends Request {
-  user: User;
+  user: UserEntity;
+  accessToken: string;
   cookies: {
     refreshToken?: string;
   };
 }
-
+@ApiTags('Authorization')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('register')
+  @ApiOkResponse({ description: 'Success', type: AuthResponseDto })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   async register(
     @Body() registerAuthDto: RegisterAuthDto,
     @Res({ passthrough: true }) res: Response,
@@ -51,6 +56,11 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ description: 'Success', type: AuthResponseDto })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad Request',
+  })
   @Post('login')
   async login(
     @Body() loginAuthDto: LoginAuthDto,
@@ -71,19 +81,21 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('refresh')
+  @ApiOkResponse({ description: 'Success', type: AuthResponseDto })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   async refresh(
     @Req() req: RequestWithCookies,
     @Res({ passthrough: true }) res: Response,
   ) {
     const reqRefreshToken = req.cookies['refreshToken'];
-    console.log('reqRefreshToken :>> ', reqRefreshToken);
     if (!reqRefreshToken) {
       throw new UnauthorizedException('Refresh token not found');
     }
 
-    const { accessToken, refreshToken, user } =
+    const { accessToken, user } =
       await this.authService.refresh(reqRefreshToken);
-    res.cookie('refreshToken', refreshToken, {
+    res.cookie('refreshToken', reqRefreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
