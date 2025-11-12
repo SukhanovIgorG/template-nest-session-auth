@@ -7,8 +7,6 @@ import {
   Res,
   UnauthorizedException,
   Req,
-  // UseGuards,
-  Get,
   Request,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -16,8 +14,6 @@ import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 
-// import { AuthGuard } from './auth.guard';
-import { Roles } from './roles.decorator';
 import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User as UserEntity } from 'src/users/user.entity';
 import { AuthResponseDto } from './dto/auth-response.dto';
@@ -102,12 +98,5 @@ export class AuthController {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return { accessToken, user };
-  }
-
-  // @UseGuards(AuthGuard)
-  @Roles(['admin'])
-  @Get('profile')
-  getProfile(@Request() req: RequestWithCookies) {
-    return req.user;
   }
 }
