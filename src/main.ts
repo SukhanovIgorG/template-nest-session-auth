@@ -3,9 +3,22 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
+import { ConsoleLogger } from '@nestjs/common';
+
+const isDev = process.env.NODE_ENV === 'development';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: isDev
+      ? new ConsoleLogger({
+          logLevels: ['error', 'warn', 'log', 'debug', 'verbose'],
+          timestamp: true,
+          json: true,
+          compact: true,
+          colors: true,
+        })
+      : ['error', 'warn', 'log'],
+  });
   //swagger settings
   const config = new DocumentBuilder()
     .setTitle('API')

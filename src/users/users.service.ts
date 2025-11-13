@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { RegisterAuthDto } from 'src/auth/dto/register-auth.dto';
 
 import * as bcrypt from 'bcrypt';
@@ -13,6 +13,9 @@ export class UsersService {
     @InjectRepository(UserEntity)
     private userRepo: Repository<UserEntity>,
   ) {}
+  private readonly logger: Logger = new Logger(UsersService.name, {
+    timestamp: true,
+  });
 
   async findByEmail(email: string): Promise<UserEntity | null> {
     return await this.userRepo.findOne({ where: { email } });
@@ -34,6 +37,7 @@ export class UsersService {
       username: 'username',
       refreshToken: undefined,
     };
+    this.logger.log(`Creating new user with email: ${dto.email}`);
     const createdUser = await this.userRepo.save(newUser);
     return createdUser;
   }
@@ -42,6 +46,7 @@ export class UsersService {
     userId: UserEntity['id'],
     refreshToken: string,
   ): Promise<UpdateResult> {
+    this.logger.log(`Updating refresh token for user with id: ${userId}`);
     return this.userRepo.update(userId, { refreshToken });
   }
 
