@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { bcryptConstant } from './constants';
 import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './user.entity';
+import { UserEntity } from '../shared/models/user.entity';
 
 @Injectable()
 export class UsersService {

@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common';
 
 import { UsersService } from './users.service';
-import { AuthGuard } from '../auth/auth.guard';
+import { AuthGuard } from '@/auth/auth.guard';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserEntity } from './user.entity';
+import { UserEntity } from '@/shared/models';
 
 @ApiTags('Users')
 @Controller('api/users')
