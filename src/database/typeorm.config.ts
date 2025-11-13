@@ -28,6 +28,7 @@ export function buildDataSourceOptions(): DataSourceOptions {
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
     entities: [__dirname + '/../**/*.entity.{ts,js}'],
+    migrations: [__dirname + '/migrations/*.{ts,js}'],
     synchronize: process.env.NODE_ENV !== 'production',
   };
 }
