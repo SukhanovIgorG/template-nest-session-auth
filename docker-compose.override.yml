@@ -6,4 +6,4 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: yarn start:dev
+    command: sh -c "yarn migration:run && yarn start:dev"

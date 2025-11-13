@@ -24,7 +24,7 @@ services:
       - "3000:3000"
     networks:
       - nest_network
-    command: npm run start:prod
+    command: sh -c "node ./node_modules/typeorm/cli.js migration:run -d dist/database/data-source.js && node dist/src/main.js"
 
 volumes:
   postgres_data:
