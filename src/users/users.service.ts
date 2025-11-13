@@ -52,6 +52,7 @@ export class UsersService {
       id: user.id,
       username: user.username,
       email: user.email,
+      roles: user.roles,
     }));
     return serialized;
   }

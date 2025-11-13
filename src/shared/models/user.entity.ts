@@ -18,6 +18,9 @@ export class UserEntity extends BaseEntity {
   @Column()
   username: string;
 
+  @Column({ type: 'text', array: true, default: ['user'] })
+  roles: string[];
+
   @Column({ type: 'text', nullable: true })
   refreshToken: string | null;
 
