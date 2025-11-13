@@ -46,7 +46,12 @@ export class UsersService {
     return this.userRepo.update(userId, { refreshToken });
   }
 
-  async getUsersList(): Promise<UserEntity[]> {
-    return this.userRepo.find();
+  async getUsersList(): Promise<Partial<UserEntity>[]> {
+    const users = await this.userRepo.find();
+    const serialized = users.map((user) => ({
+      username: user.username,
+      email: user.email,
+    }));
+    return serialized;
   }
 }
