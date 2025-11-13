@@ -49,6 +49,7 @@ export class UsersService {
   async getUsersList(): Promise<Partial<UserEntity>[]> {
     const users = await this.userRepo.find();
     const serialized = users.map((user) => ({
+      id: user.id,
       username: user.username,
       email: user.email,
     }));
