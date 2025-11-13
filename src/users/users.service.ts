@@ -6,24 +6,24 @@ import * as bcrypt from 'bcrypt';
 import { bcryptConstant } from './constants';
 import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private userRepo: Repository<User>,
+    @InjectRepository(UserEntity)
+    private userRepo: Repository<UserEntity>,
   ) {}
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<UserEntity | null> {
     return await this.userRepo.findOne({ where: { email } });
   }
 
-  async findByRefreshToken(refreshToken: string): Promise<User | null> {
+  async findByRefreshToken(refreshToken: string): Promise<UserEntity | null> {
     return await this.userRepo.findOne({ where: { refreshToken } });
   }
 
-  async create(dto: RegisterAuthDto): Promise<User> {
+  async create(dto: RegisterAuthDto): Promise<UserEntity> {
     const hashPassword = await bcrypt.hash(
       dto.password,
       bcryptConstant.saltOrRounds,
@@ -40,13 +40,13 @@ export class UsersService {
   }
 
   async updateRefreshToken(
-    userId: User['id'],
+    userId: UserEntity['id'],
     refreshToken: string,
   ): Promise<UpdateResult> {
     return this.userRepo.update(userId, { refreshToken });
   }
 
-  async getUsersList(): Promise<User[]> {
+  async getUsersList(): Promise<UserEntity[]> {
     return this.userRepo.find();
   }
 }

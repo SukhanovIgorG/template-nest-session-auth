@@ -15,7 +15,7 @@ import { RegisterAuthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 
 import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { User as UserEntity } from 'src/users/user.entity';
+import { UserEntity as UserEntity } from 'src/users/user.entity';
 import { AuthResponseDto } from './dto/auth-response.dto';
 
 interface RequestWithCookies extends Request {
