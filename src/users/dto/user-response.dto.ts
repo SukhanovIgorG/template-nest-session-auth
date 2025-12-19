@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UserResponseDto {
+export class UserDto {
   @ApiProperty()
   id: string;
 
@@ -10,9 +10,17 @@ export class UserResponseDto {
   @ApiProperty()
   username: string;
 
-  @ApiProperty()
-  createdAt: Date;
+  @ApiProperty({ type: [String] })
+  roles: string[];
+}
+
+export class UsersListResponseDto {
+  @ApiProperty({ type: [UserDto] })
+  result: UserDto[];
 
   @ApiProperty()
-  updatedAt: Date;
+  pagination: {
+    total: number;
+    page: number;
+  };
 }

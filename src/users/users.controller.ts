@@ -9,7 +9,7 @@ import {
 import { UsersService } from './users.service';
 import { AuthGuard } from '@/auth/auth.guard';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserEntity } from '@/shared/models';
+import { UsersListResponseDto } from './dto/user-response.dto';
 
 @ApiTags('Users')
 @Controller('api/users')
@@ -21,12 +21,16 @@ export class UsersController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Success',
-    type: [UserEntity],
+    type: UsersListResponseDto,
   })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
   @UseGuards(AuthGuard)
-  getUsers() {
-    const users = this.usersService.getUsersList();
-    return users;
+  async getUsers() {
+    const users = await this.usersService.getUsersList();
+    const pagination = {
+      total: users.length,
+      page: 1,
+    };
+    return { pagination, result: users };
   }
 }
