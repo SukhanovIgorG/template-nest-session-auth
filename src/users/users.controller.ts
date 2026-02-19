@@ -30,7 +30,8 @@ export class UsersController {
     const pagination = {
       total: users.length,
       page: 1,
+      size: 10,
     };
-    return { pagination, result: users };
+    return { pagination, data: users };
   }
 }

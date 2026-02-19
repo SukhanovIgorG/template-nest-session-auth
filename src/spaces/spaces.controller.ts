@@ -17,7 +17,7 @@ import {
   UpdateSpaceResponseDto,
 } from './dto';
 
-@Controller('spaces')
+@Controller('api/spaces')
 export class SpacesController {
   constructor(private readonly spacesService: SpacesService) {}
 

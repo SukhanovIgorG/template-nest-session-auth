@@ -58,6 +58,7 @@ export class UsersService {
       email: user.email,
       roles: user.roles,
     }));
+
     return serialized;
   }
 }
