@@ -3,7 +3,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import { ConsoleLogger } from '@nestjs/common';
+import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -28,6 +28,13 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, documentFactory);
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
   // Disable CORS for all origins
   app.enableCors({
     origin: 'http://localhost:5173',
@@ -45,4 +52,4 @@ async function bootstrap() {
   // Start the server
   await app.listen(process.env.PORT ?? 3000);
 }
-bootstrap();
+void bootstrap();
